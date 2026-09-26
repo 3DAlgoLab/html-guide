@@ -1,0 +1,23 @@
+{
+  "name": "pi-html-guide",
+  "version": "0.1.1",
+  "description": "Pi package: html-guide skill — turn lectures, papers, docs, or video transcripts into one self-contained interactive HTML study guide with chunk-by-chunk lessons and instant-feedback quizzes.",
+  "keywords": [
+    "pi-package",
+    "pi-skill",
+    "interactive-html",
+    "study-guide",
+    "quiz",
+    "learning"
+  ],
+  "license": "MIT",
+  "files": [
+    "skills",
+    "README.md"
+  ],
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  }
+}

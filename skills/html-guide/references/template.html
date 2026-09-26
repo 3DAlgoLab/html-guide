@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Study Guide — replace me</title>
+    <style>
+      :root {
+        --bg: #0f1420;
+        --panel: #171e2e;
+        --panel2: #1d2740;
+        --ink: #e8ecf4;
+        --ink-dim: #9aa7bd;
+        --accent: #5eead4;
+        --accent2: #818cf8;
+        --good: #34d399;
+        --bad: #f87171;
+        --warn: #fbbf24;
+        --line: #2b3a55;
+        --code-bg: #0b0f19;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          16px/1.65 -apple-system,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        line-height: 1.25;
+        color: #fff;
+      }
+      h1 {
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        margin: 0.2em 0;
+      }
+      h2 {
+        font-size: clamp(1.2rem, 3vw, 1.6rem);
+        margin-top: 2.4em;
+        border-bottom: 2px solid var(--line);
+        padding-bottom: 0.3em;
+      }
+      h3 {
+        font-size: 1.08rem;
+        margin-top: 1.4em;
+      }
+      a {
+        color: var(--accent);
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .wrap {
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 0 18px 80px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #14203a, #0f1420 70%);
+        border-bottom: 1px solid var(--line);
+        padding: 48px 0 34px;
+        margin-bottom: 8px;
+      }
+      .hero small {
+        color: var(--ink-dim);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .tag {
+        color: var(--accent);
+      }
+      p {
+        margin: 0.6em 0;
+      }
+      ul,
+      ol {
+        margin: 0.5em 0;
+      }
+      li {
+        margin: 0.25em 0;
+      }
+      code {
+        background: var(--code-bg);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 0.1em 0.35em;
+        font:
+          0.92em "JetBrains Mono",
+          Menlo,
+          Consolas,
+          monospace;
+        color: #c9e7f7;
+      }
+      pre {
+        background: var(--code-bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px 16px;
+        overflow-x: auto;
+        white-space: pre;
+        font:
+          0.86em/1.55 "JetBrains Mono",
+          Menlo,
+          Consolas,
+          monospace;
+      }
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1em 0;
+        font-size: 0.95em;
+      }
+      th,
+      td {
+        border: 1px solid var(--line);
+        padding: 7px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--panel2);
+        color: #dbe4f3;
+      }
+      td {
+        background: var(--panel);
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+      /* ---------- TOC ---------- */
+      .toc {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin: 22px 0;
+      }
+      .toc h2 {
+        border: none;
+        margin: 0 0 8px;
+        padding: 0;
+        font-size: 1.1rem;
+      }
+      .toc ol {
+        margin: 0;
+        padding-left: 22px;
+        columns: 2;
+        column-gap: 40px;
+      }
+      .toc a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .toc a:hover {
+        color: var(--accent);
+      }
+      @media (max-width: 640px) {
+        .toc ol {
+          columns: 1;
+        }
+      }
+      @media (max-width: 640px) {
+        table {
+          table-layout: fixed;
+        }
+        th,
+        td {
+          overflow-wrap: anywhere;
+        }
+        .flow {
+          flex-direction: column;
+        }
+        .arrow {
+          transform: rotate(90deg);
+          align-self: center;
+          padding: 0;
+        }
+        .matrix {
+          display: block;
+          margin: 10px 0 0;
+        }
+        .matrix .row .lblr {
+          width: 42px;
+        }
+        .cell {
+          width: 38px;
+          height: 30px;
+          line-height: 30px;
+        }
+        .pipe {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      /* ---------- chunk cards ---------- */
+      .chunk {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-left: 5px solid var(--accent);
+        border-radius: 12px;
+        padding: 20px 22px;
+        margin: 26px 0;
+        scroll-margin-top: 18px;
+      }
+      .chunk h2 {
+        margin-top: 0;
+        border: none;
+      }
+      .chunk h2 .cn {
+        color: var(--accent);
+        font-size: 0.85em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 2px;
+      }
+      .chunk h3 {
+        margin-top: 1.2em;
+      }
+      /* ---------- callouts ---------- */
+      .def,
+      .tip,
+      .warn,
+      .obs {
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin: 14px 0;
+        border: 1px solid var(--line);
+      }
+      .def {
+        border-left: 5px solid var(--accent);
+        background: #11231f;
+      }
+      .def .lbl {
+        color: var(--accent);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.78em;
+        letter-spacing: 0.08em;
+      }
+      .tip {
+        border-left: 5px solid var(--accent2);
+        background: #161d33;
+      }
+      .tip .lbl {
+        color: var(--accent2);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.78em;
+        letter-spacing: 0.08em;
+      }
+      .warn {
+        border-left: 5px solid var(--warn);
+        background: #2a2313;
+      }
+      .warn .lbl {
+        color: var(--warn);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.78em;
+        letter-spacing: 0.08em;
+      }
+      .obs {
+        border-left: 5px solid var(--good);
+        background: #12231c;
+      }
+      .obs .lbl {
+        color: var(--good);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.78em;
+        letter-spacing: 0.08em;
+      }
+      /* ---------- diagrams ---------- */
+      .flow {
+        display: flex;
+        align-items: stretch;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 14px 0;
+      }
+      .node {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+        min-width: 120px;
+        flex: 1;
+        font-size: 0.9em;
+      }
+      .node b {
+        display: block;
+        color: #fff;
+        margin-bottom: 3px;
+      }
+      .node small {
+        color: var(--ink-dim);
+      }
+      .arrow {
+        align-self: center;
+        font-size: 1.3em;
+        color: var(--accent);
+        padding: 0 2px;
+      }
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 14px 0;
+      }
+      .layer {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: var(--panel2);
+      }
+      .layer.top {
+        border-left: 5px solid var(--accent);
+      }
+      .layer.mid {
+        border-left: 5px solid var(--accent2);
+      }
+      .layer.bot {
+        border-left: 5px solid var(--warn);
+      }
+      .layer b {
+        color: #fff;
+      }
+      .matrix {
+        display: inline-grid;
+        gap: 6px;
+        margin: 10px 8px 0 0;
+        vertical-align: top;
+      }
+      .matrix .row {
+        display: flex;
+        gap: 6px;
+      }
+      .matrix .row .lblr {
+        width: 64px;
+        color: var(--ink-dim);
+        font-size: 0.82em;
+        line-height: 34px;
+        text-align: right;
+        padding-right: 4px;
+      }
+      .cell {
+        width: 44px;
+        height: 34px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        text-align: center;
+        line-height: 34px;
+        font-size: 0.9em;
+      }
+      .cell.hl {
+        background: #17351f;
+        border-color: var(--good);
+        color: #a7f3d0;
+      }
+      .cell.hl2 {
+        background: #2a2a4a;
+        border-color: var(--accent2);
+        color: #c7d2fe;
+      }
+      .caption {
+        color: var(--ink-dim);
+        font-size: 0.85em;
+        margin: 2px 0 10px;
+      }
+      .pipe {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        margin: 12px 0;
+      }
+      .pipe div {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 6px;
+        text-align: center;
+        font-size: 0.82em;
+        background: var(--panel2);
+        color: var(--ink-dim);
+      }
+      .pipe div b {
+        display: block;
+        color: #fff;
+      }
+      .pipe .busy {
+        background: #17351f;
+        color: #a7f3d0;
+        border-color: var(--good);
+      }
+      .pipe .idle {
+        background: #331a1a;
+        color: #fca5a5;
+        border-color: var(--bad);
+      }
+
+      /* ---------- collapsible quiz (collapsed by default) ---------- */
+      .quiz-block {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        margin: 18px 0 4px;
+        background: var(--panel2);
+        overflow: hidden;
+      }
+      .quiz-block summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 10px 14px;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .quiz-block summary::-webkit-details-marker {
+        display: none;
+      }
+      .quiz-block summary::before {
+        content: "\25B8";
+        color: var(--accent);
+        font-size: 0.85em;
+        transition: transform 0.15s;
+      }
+      .quiz-block[open] summary::before {
+        content: "\25BE";
+      }
+      .quiz-block summary:hover {
+        background: var(--line);
+      }
+      .quiz-block summary h3 {
+        margin: 0;
+        font-size: 1rem;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+      .quiz-block .score {
+        font-size: 0.85em;
+        color: var(--ink-dim);
+        margin-left: auto;
+        white-space: nowrap;
+      }
+      .quiz-block[open] summary {
+        border-bottom: 1px dashed var(--line);
+      }
+      .quiz-block .quiz {
+        margin: 8px 4px 10px;
+        border-top: none;
+        padding-top: 8px;
+      }
+
+      /* ---------- quiz ---------- */
+      .quiz {
+        margin: 18px 0 6px;
+        border-top: 1px dashed var(--line);
+        padding-top: 14px;
+      }
+      .quiz h3 {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .quiz .score {
+        font-size: 0.85em;
+        color: var(--ink-dim);
+        margin-left: auto;
+        white-space: nowrap;
+      }
+      .q {
+        margin: 16px 0 4px;
+      }
+      .q .qt {
+        font-weight: 600;
+        color: #e9eef8;
+      }
+      .ops {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 8px 0;
+      }
+      .op {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        text-align: left;
+        background: var(--panel2);
+        border: 2px solid var(--line);
+        border-radius: 9px;
+        padding: 10px 12px;
+        color: var(--ink);
+        font-size: 0.95rem;
+        cursor: pointer;
+        width: 100%;
+        font-family: inherit;
+        line-height: 1.45;
+      }
+      .op:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      .op .let {
+        font-weight: 700;
+        color: var(--accent2);
+        min-width: 22px;
+      }
+      .op:disabled {
+        cursor: default;
+        opacity: 0.92;
+      }
+      .op.correct {
+        border-color: var(--good);
+        background: #122a20;
+      }
+      .op.wrong {
+        border-color: var(--bad);
+        background: #2c1718;
+      }
+      .op.other {
+        border-color: var(--line);
+        background: var(--panel2);
+        opacity: 0.55;
+      }
+      .fb {
+        border-radius: 9px;
+        padding: 10px 14px;
+        margin: 8px 0;
+        font-size: 0.93rem;
+        display: none;
+        border: 1px solid var(--line);
+      }
+      .fb.ok {
+        display: block;
+        background: #122a20;
+        border-color: var(--good);
+      }
+      .fb.no {
+        display: block;
+        background: #2c1718;
+        border-color: var(--bad);
+      }
+      .fb b {
+        display: block;
+        margin-bottom: 3px;
+      }
+      .fb .arrow {
+        color: var(--ink);
+        font-size: 0.95em;
+      }
+      footer {
+        margin-top: 48px;
+        color: var(--ink-dim);
+        font-size: 0.85em;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+      }
+      kbd {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 0.85em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="wrap">
+        <small>Replace: source / course / date</small>
+        <h1>Title — <span class="tag">subtitle</span></h1>
+        <p>
+          One self-contained, offline page that teaches the content chunk by
+          chunk, with an interactive quiz in every chunk.
+        </p>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="toc">
+        <h2>Table of contents</h2>
+        <ol>
+          <li><a href="#chunk-1">Chunk 1</a></li>
+          <li><a href="#chunk-2">Chunk 2</a></li>
+          <li><a href="#chunk-3">Chunk 3</a></li>
+        </ol>
+      </div>
+
+      <!-- ============ HOW TO USE THIS TEMPLATE =====================
+ 1. Give the page a title in <title> and in the .hero block.
+ 2. Update the TOC <ol> to match your chunk ids (chunk-1, chunk-2, ...).
+ 3. For each chunk, copy the <div class="chunk" id="chunk-N"> ... </div>
+    block and fill: a heading, your explanation (paragraphs, callouts
+    .def/.tip/.warn/.obs, small CSS diagrams), and the page's script at the bottom renders the quizzes
+    the bottom. The quiz for a chunk is rendered automatically from the
+    QUIZZES array (keep the order: quiz i -> chunk id "chunk-(i+1)").
+ 4. The quiz data schema (see QUIZZES in the page's script section):
+      { id:"q1", title:"Chunk 1 · <name>", qs:[{ q:"question text",
+        opts:[{t:"option text", c:false, why:"why this distractor is wrong"},
+              {t:"correct option", c:true,  why:"why correct"}],
+        good:"short explanation shown when answered correctly" }] }
+    - The correct-answer position rotates automatically (chunkIndex+qIdx)%4,
+      so DO NOT order options to guess the pattern — mark c:true on whichever
+      option is correct and the engine places it.
+    - Every wrong option needs a 'why' (the misconception it represents).
+    - 3-5 questions per chunk, medium difficulty, plausible distractors.
+ ============================================================== -->
+
+      <div class="chunk" id="chunk-1">
+        <h2><span class="cn">Chunk 1</span>Put your first chunk title here</h2>
+        <p>
+          Write the lesson. Use a
+          <code>def</code>/<code>tip</code>/<code>warn</code>/<code>obs</code>
+          callout when a definition, gotcha, or verified observation helps:
+        </p>
+        <div class="def">
+          <span class="lbl">A definition callout</span>
+          <p style="margin-top: 6px">
+            Explain a key term here — bold the term on first use.
+          </p>
+        </div>
+      </div>
+      <p>Add a CSS diagram (semantic HTML, no ASCII art):</p>
+      <div class="flow">
+        <div class="node"><b>A</b><small>input</small></div>
+        <span class="arrow">→</span>
+        <div class="node"><b>B</b><small>output</small></div>
+      </div>
+    </div>
+    <!-- /wrap -->
+
+    <!-- Copy this block for each additional chunk; keep ids sequential. -->
+    <!-- <div class="chunk" id="chunk-2"> ... </div> -->
+
+    <footer class="wrap">
+      <p>
+        <strong>Sources:</strong> list source materials here. Separate
+        verified/observed facts from interpretation.
+      </p>
+      <p>
+        Generated date · self-contained (no external assets, works offline).
+      </p>
+    </footer>
+
+    <script>
+      (function () {
+        "use strict";
+        // ---------- HTML escape (quiz strings are injected via innerHTML below) ----------
+        function esc(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+        // ---------- deterministic PRNG + shuffle ----------
+        function mulberry32(seed) {
+          var a = seed >>> 0;
+          return function () {
+            a |= 0;
+            a = (a + 0x6d2b79f5) | 0;
+            var t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+        var SEED = 20260821;
+        function seededShuffle(arr, seed) {
+          var rnd = mulberry32(SEED * (seed + 1) * 2654435761);
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(rnd() * (i + 1));
+            var t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        }
+
+        // ---------- quiz data ----------
+        // schema: { id, qs: [ { q, opts:[{t,c,why}], good } ] }
+        var QUIZZES = [
+          {
+            id: "q1",
+            title: "Chunk 1 · <your chunk>",
+            qs: [
+              {
+                q: "A medium-difficulty question the reader must reason about (not word-match).",
+                opts: [
+                  {
+                    t: "A plausible distractor that matches a real misunderstanding",
+                    c: false,
+                    why: "Why this option is wrong — the misconception it represents.",
+                  },
+                  {
+                    t: "Another plausible distractor of similar length",
+                    c: false,
+                    why: "Why this one is wrong too.",
+                  },
+                  {
+                    t: "The correct answer, stated plainly",
+                    c: true,
+                    why: "Why this is right — concise reasoning.",
+                  },
+                  {
+                    t: "A fourth plausible but incorrect option",
+                    c: false,
+                    why: "Why it loses to the correct answer.",
+                  },
+                ],
+                good: "The full correct reasoning, shown when the reader answers right.",
+              },
+              {
+                q: "A second question for this chunk — 3-5 questions total per chunk.",
+                opts: [
+                  {
+                    t: "Distractor A",
+                    c: false,
+                    why: "The misconception behind it.",
+                  },
+                  { t: "Distractor B", c: false, why: "Why it does not hold." },
+                  { t: "Distractor C", c: false, why: "The trap it sets." },
+                  {
+                    t: "Correct answer",
+                    c: true,
+                    why: "The reason this is right.",
+                  },
+                ],
+                good: "Short correct-reasoning summary, ties back to the chunk content.",
+              },
+            ],
+          },
+        ];
+
+        // ---------- render ----------
+        var LETTERS = ["A", "B", "C", "D"];
+        QUIZZES.forEach(function (quiz, qzIdx) {
+          // collapsed-by-default <details> wrapper; the reader expands it to answer.
+          var details = document.createElement("details");
+          details.className = "quiz-block";
+          var summary = document.createElement("summary");
+          var h = document.createElement("h3");
+          h.textContent = "Quiz — " + quiz.title;
+          var score = document.createElement("span");
+          score.className = "score";
+          score.textContent = "0/" + quiz.qs.length;
+          h.appendChild(score);
+          summary.appendChild(h);
+          details.appendChild(summary);
+
+          var container = document.createElement("div");
+          container.className = "quiz";
+          details.appendChild(container);
+
+          var answered = 0,
+            correct = 0;
+
+          quiz.qs.forEach(function (item, qIdx) {
+            var wrap = document.createElement("div");
+            wrap.className = "q";
+
+            var qt = document.createElement("div");
+            qt.className = "qt";
+            qt.textContent = qIdx + 1 + ". " + item.q;
+            wrap.appendChild(qt);
+
+            // ---- constrained placement (deterministic, stable across reloads) ----
+            // The correct option's displayed position rotates (chunkIndex + qIdx) % 4.
+            // This guarantees by construction: (a) no two consecutive questions in a
+            // chunk share a letter, (b) >= 3 distinct letters for chunks with >= 3
+            // questions, (c) balanced letter tally within the chunk. The wrong options
+            // are seeded-shuffled into the remaining slots so placement stays varied.
+            var targetPos = (qzIdx + qIdx) % 4;
+            var correctOpt = null,
+              wrongOpts = [];
+            item.opts.forEach(function (o) {
+              if (o.c) correctOpt = o;
+              else wrongOpts.push(o);
+            });
+            var wrongShuffled = seededShuffle(wrongOpts, qzIdx * 137 + qIdx);
+            var otherSlots = seededShuffle(
+              [0, 1, 2, 3].filter(function (x) {
+                return x !== targetPos;
+              }),
+              qzIdx * 17 + qIdx,
+            );
+            var shuffled = new Array(4);
+            shuffled[targetPos] = { o: correctOpt };
+            wrongShuffled.forEach(function (o, k) {
+              shuffled[otherSlots[k]] = { o: o };
+            });
+
+            var ops = document.createElement("div");
+            ops.className = "ops";
+
+            var fb = document.createElement("div");
+            fb.className = "fb";
+            fb.setAttribute("role", "status");
+
+            shuffled.forEach(function (entry, pos) {
+              var btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "op";
+              btn.setAttribute("aria-label", "Option " + LETTERS[pos]);
+              var letSpan = document.createElement("span");
+              letSpan.className = "let";
+              letSpan.textContent = LETTERS[pos];
+              var tSpan = document.createElement("span");
+              tSpan.textContent = entry.o.t;
+              btn.appendChild(letSpan);
+              btn.appendChild(tSpan);
+
+              btn.addEventListener("click", function () {
+                if (btn.disabled) return;
+                answered++;
+                var isRight = entry.o.c;
+                if (isRight) correct++;
+                score.textContent = "Correct " + correct + "/" + answered;
+
+                // lock the question
+                var btns = ops.querySelectorAll(".op");
+                btns.forEach(function (b, k) {
+                  b.disabled = true;
+                  var orig = shuffled[k].o;
+                  if (orig.c) b.classList.add("correct");
+                  else if (b === btn) b.classList.add("wrong");
+                  else b.classList.add("other");
+                });
+
+                if (answered === quiz.qs.length) {
+                  doneLbl.textContent =
+                    "Chunk complete — you got " +
+                    correct +
+                    " of " +
+                    quiz.qs.length +
+                    " right. Reload the page to re-shuffle the options.";
+                }
+
+                if (isRight) {
+                  fb.className = "fb ok";
+                  // pi-lens-ignore: no-inner-html-js
+                  fb.innerHTML = "<b>✓ Correct.</b> " + esc(item.good);
+                } else {
+                  fb.className = "fb no";
+                  var rightText = item.opts.filter(function (o) {
+                    return o.c;
+                  })[0].t;
+                  // pi-lens-ignore: no-inner-html-js
+                  fb.innerHTML =
+                    "<b>✗ Not that one.</b> " +
+                    esc(entry.o.why) +
+                    "<br><span class='arrow'>The right choice: “" +
+                    esc(rightText) +
+                    "” — " +
+                    esc(item.good) +
+                    "</span>";
+                }
+              });
+              ops.appendChild(btn);
+            });
+
+            wrap.appendChild(ops);
+            wrap.appendChild(fb);
+            container.appendChild(wrap);
+          });
+
+          // final summary line after all questions answered
+          var doneLbl = document.createElement("p");
+          doneLbl.className = "caption";
+          doneLbl.style.marginTop = "10px";
+          container.appendChild(doneLbl);
+
+          // wrap the whole per-chunk quiz into its chunk section
+          var chunk = document.getElementById("chunk-" + quiz.id.slice(1)); // "q1" -> "chunk-1"
+          if (chunk) chunk.appendChild(details);
+        });
+      })();
+    </script>
+  </body>
+</html>
