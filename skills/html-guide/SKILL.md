@@ -1,9 +1,9 @@
 ---
 name: html-guide
-description: 'Turn any study material — a lecture PDF, paper, article, doc page, or video transcript — into one self-contained interactive HTML study guide: chunk-by-chunk lessons, each ending with an interactive multiple-choice quiz that gives instant per-option feedback. Use when the user wants a rich interactive HTML document to learn or teach content (lectures, papers, docs, videos) with built-in comprehension checks, or says "explain-diff style but for this lecture/doc", "make an interactive study guide", "make flashcards/quizzes HTML for this content".'
+description: 'Turn any study material — a lecture PDF, paper, article, doc page, or video transcript — into one self-contained HTML study guide: chunk-by-chunk lessons, each ending with a multiple-choice quiz that gives instant per-option feedback. Use when the user wants a self-contained HTML document to learn or teach content (lectures, papers, docs, videos) with built-in comprehension checks, or says "explain-diff style but for this lecture/doc", "make an HTML study guide", "make flashcards/quizzes HTML for this content".'
 ---
 
-# Interactive HTML Guide
+# HTML Guide
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # pi-html-guide
 
-A [pi](https://pi.dev) package for the **html-guide** skill: turn any learning material — lecture PDFs, papers, articles, doc pages, video transcripts — into a **single self-contained interactive HTML study guide**: chunk-by-chunk lessons, each ending with a multiple-choice quiz that gives instant per-option feedback. No CDNs, no fonts, no network: the file works offline, forever.
+A [pi](https://pi.dev) package for the **html-guide** skill: turn any learning material — lecture PDFs, papers, articles, doc pages, video transcripts — into a **single self-contained HTML study guide**: chunk-by-chunk lessons, each ending with a multiple-choice quiz that gives instant per-option feedback. No CDNs, no fonts, no network: the file works offline, forever.
 
 ## Install
 
@@ -15,8 +15,8 @@ Verify with `pi list`.
 
 Just ask pi:
 
-- "Make an interactive study guide from this lecture PDF"
-- "Turn this YouTube transcript into an interactive HTML guide"
+- "Make an HTML study guide from this lecture PDF"
+- "Turn this YouTube transcript into an HTML guide"
 - "html-guide style, but for this paper"
 
 The skill splits the source into 10–16 logical chunks, fills its bundled `references/template.html` with the lesson content and a per-chunk quiz, and saves the result as a single file at `/tmp/YYYY-MM-DD-<slug>.html` (reported as a clickable local-file link).
